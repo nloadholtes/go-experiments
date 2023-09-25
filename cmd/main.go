@@ -1,15 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
-	"fmt"
 )
 
 func main() {
-	cmd := exec.Command("ls", "-la")
+	fmt.Println(len(os.Args), os.Args)
+	cmd_args := os.Args[1:]
+	cmd := exec.Command("zsh", cmd_args...)
 	cmd.Env = append(os.Environ(),
 		"FOO=duplicate_value", // ignored
 		"FOO=actual_value",    // this value is used

@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+func CommandFromString(input string) (*exec.Cmd, error) {
+	input_values := strings.Split(input, " ")
+	var command string = input_values[0]
+
+	return exec.Command(command, input_values[1:]...), nil
+}
+
 func main() {
 	fmt.Println(len(os.Args), os.Args)
 	cmd_args := os.Args[1:]

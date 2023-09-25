@@ -10,9 +10,12 @@ import (
 
 func CommandFromString(input string) (*exec.Cmd, error) {
 	input_values := strings.Split(input, " ")
+	fmt.Println(input_values[1:])
 	var command string = input_values[0]
+	var values string = input_values[1]
+	fmt.Println(values)
 
-	return exec.Command(command, input_values[1:]...), nil
+	return exec.Command(command, values), nil
 }
 
 func main() {
@@ -30,5 +33,5 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("OUTPUT:\n", out.String())
+	fmt.Printf("OUTPUT:\n %s", out.String())
 }

@@ -10,10 +10,8 @@ import (
 
 func CommandFromString(input string) (*exec.Cmd, error) {
 	input_values := strings.Split(input, " ")
-	fmt.Println(input_values[1:])
 	var command string = input_values[0]
 	var values string = input_values[1]
-	fmt.Println(values)
 
 	return exec.Command(command, values), nil
 }

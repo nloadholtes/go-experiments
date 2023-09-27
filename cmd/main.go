@@ -15,9 +15,8 @@ func CommandFromString(input string) (*exec.Cmd, error) {
 
 func CommandFromStringSlice(input []string) (*exec.Cmd, error) {
 	var command string = input[0]
-	var values string = input[1]
-
-	return exec.Command(command, values), nil
+	var values []string = input[1:]
+	return exec.Command(command, values...), nil
 }
 
 func main() {

@@ -6,7 +6,7 @@ import (
 )
 
 func TestCommandFromString(t *testing.T) {
-	cmd_obj, err := CommandFromString("ls -la")
+	cmd_obj, err := CommandFromString("ls -la", make(map[string]string))
 	if err != nil {
 		t.Fatal("CommandFromString errored out: ", err)
 	}
@@ -21,7 +21,7 @@ func TestCommandFromString(t *testing.T) {
 }
 
 func TestCommandFromStringSlice(t *testing.T) {
-	cmd_obj, err := CommandFromStringSlice([]string{"ls", "-la"})
+	cmd_obj, err := CommandFromStringSlice([]string{"ls", "-la"}, make(map[string]string))
 	if err != nil {
 		t.Fatal("CommandFromString errored out: ", err)
 	}

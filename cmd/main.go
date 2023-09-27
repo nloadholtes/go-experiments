@@ -8,19 +8,25 @@ import (
 	"strings"
 )
 
-func CommandFromString(input string) (*exec.Cmd, error) {
+func CommandFromString(input string, alias_map map[string]string) (*exec.Cmd, error) {
 	input_values := strings.Split(input, " ")
-	return CommandFromStringSlice(input_values)
+	return CommandFromStringSlice(input_values, alias_map)
 }
 
-func CommandFromStringSlice(input []string) (*exec.Cmd, error) {
+func CommandFromStringSlice(input []string, alias_map map[string]string) (*exec.Cmd, error) {
 	var command string = input[0]
 	var values []string = input[1:]
+	alias_command, ok := alias_map[command]
+	if ok {
+		alias_command_slice := strings.Split(alias_command, " ")
+		command = alias_command_slice[0]
+		values = append(alias_command_slice[1:], input[1:]...)
+	}
 	return exec.Command(command, values...), nil
 }
 
 func MapAliases() (map[string]string, error) {
-	var output map[string]string
+	var output = make(map[string]string)
 	cmd := exec.Command("/usr/bin/zsh", "-ic", "alias")
 	cmd_output, err := cmd.Output()
 	if err != nil {
@@ -32,7 +38,7 @@ func MapAliases() (map[string]string, error) {
 		if line == "" {
 			continue
 		}
-		parts := strings.SplitN(line, "=", 2)
+		parts := strings.SplitN(strings.ReplaceAll(line, "'", ""), "=", 2)
 		output[parts[0]] = parts[1]
 	}
 
@@ -42,7 +48,8 @@ func MapAliases() (map[string]string, error) {
 func main() {
 	//fmt.Println(len(os.Args), os.Args)
 	cmd_args := os.Args[1:]
-	cmd, _ := CommandFromStringSlice(cmd_args)
+	alias_map, _ := MapAliases()
+	cmd, _ := CommandFromStringSlice(cmd_args, alias_map)
 	cmd.Env = append(os.Environ(),
 		"FOO=duplicate_value", // ignored
 		"FOO=actual_value",    // this value is used

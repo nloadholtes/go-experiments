@@ -19,6 +19,26 @@ func CommandFromStringSlice(input []string) (*exec.Cmd, error) {
 	return exec.Command(command, values...), nil
 }
 
+func MapAliases() (map[string]string, error) {
+	var output map[string]string
+	cmd := exec.Command("/usr/bin/zsh", "-ic", "alias")
+	cmd_output, err := cmd.Output()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return nil, err
+	}
+	cmd_lines := strings.Split(string(cmd_output), "\n")
+	for _, line := range cmd_lines {
+		if line == "" {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		output[parts[0]] = parts[1]
+	}
+
+	return output, nil
+}
+
 func main() {
 	//fmt.Println(len(os.Args), os.Args)
 	cmd_args := os.Args[1:]

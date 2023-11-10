@@ -46,10 +46,11 @@ func MapAliases() (map[string]string, error) {
 }
 
 func main() {
-	//fmt.Println(len(os.Args), os.Args)
 	cmd_args := os.Args[1:]
 	alias_map, _ := MapAliases()
 	cmd, _ := CommandFromStringSlice(cmd_args, alias_map)
+	// I know I needed env, but I don't remember why the FOO
+	// was added/needed.
 	cmd.Env = append(os.Environ(),
 		"FOO=duplicate_value", // ignored
 		"FOO=actual_value",    // this value is used
@@ -61,5 +62,5 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("OUTPUT:\n %s", out.String())
+	fmt.Printf("%s", out.String())
 }
